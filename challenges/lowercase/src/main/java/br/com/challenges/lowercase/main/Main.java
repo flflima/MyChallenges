@@ -3,6 +3,7 @@ package br.com.challenges.lowercase.main;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
@@ -18,22 +19,9 @@ public class Main {
 			logger.info("Iniciando leitura");
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
-			String line;
-			StringBuffer buffer = new StringBuffer();
+			StringBuffer buffer = readLine(bufferedReader);
 			
-			while ((line = bufferedReader.readLine()) != null) {
-				String[] lineArray = line.split("\\s");
-				if (lineArray.length > 0) {
-					logger.debug("Lendo a linha: " + line);
-					StringBuilder builder = new StringBuilder();
-					for (int i = 0; i < lineArray.length; i++) {
-						builder.append(lineArray[i].toLowerCase()).append(" ");
-					}
-					buffer.append(builder.toString().trim()).append("\n");
-				}
-			}
-			
-			buffer.replace(buffer.length() - 1, buffer.length(), "");
+			removeLastCarriageReturnChar(buffer);
 			
 			logger.info("String em lowerCase: \n" + buffer.toString());
 			
@@ -41,6 +29,34 @@ public class Main {
 		} catch (Exception e) {
 			logger.debug("Erro ao manipular o arquivo: ", e);
 		}
+	}
+
+	private static StringBuffer readLine(BufferedReader bufferedReader) throws IOException {
+		String line;
+		StringBuffer buffer = new StringBuffer();
+		
+		while ((line = bufferedReader.readLine()) != null) {
+			logger.debug("Lendo a linha: " + line);
+
+			String[] lineArray = line.split("\\s");
+			if (lineArray.length > 0) {
+				buffer.append(buildLineWithLowercase(lineArray));
+			}
+		}
+		return buffer;
+	}
+
+	private static StringBuilder buildLineWithLowercase(String[] lineArray) {
+		StringBuilder builder = new StringBuilder();
+		
+		for (int i = 0; i < lineArray.length; i++) {
+			builder.append(lineArray[i].toLowerCase()).append(" ");
+		}
+		return builder.append(builder.toString().trim()).append("\n");
+	}
+
+	private static void removeLastCarriageReturnChar(StringBuffer buffer) {
+		buffer.replace(buffer.length() - 1, buffer.length(), "");
 	}
 
 }
