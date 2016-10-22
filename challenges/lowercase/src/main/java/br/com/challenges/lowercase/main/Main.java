@@ -15,23 +15,21 @@ public class Main {
 			String fileName = args[0];
 			File file = new File(fileName);
 			logger.debug("Caminho do arquivo: " + file.getAbsolutePath());
-			
-			logger.info("Iniciando leitura");
-			BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
-			StringBuffer buffer = readLine(bufferedReader);
+			StringBuffer buffer = readLine(file);
 			
 			removeLastCarriageReturnChar(buffer);
 			
 			logger.info("String em lowerCase: \n" + buffer.toString());
-			
-			bufferedReader.close();
 		} catch (Exception e) {
 			logger.debug("Erro ao manipular o arquivo: ", e);
 		}
 	}
 
-	private static StringBuffer readLine(BufferedReader bufferedReader) throws IOException {
+	private static StringBuffer readLine(File file) throws IOException {
+		logger.info("Iniciando leitura");
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+		
 		String line;
 		StringBuffer buffer = new StringBuffer();
 		
@@ -43,6 +41,8 @@ public class Main {
 				buffer.append(buildLineWithLowercase(lineArray));
 			}
 		}
+		
+		bufferedReader.close();
 		return buffer;
 	}
 
