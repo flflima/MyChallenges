@@ -47,40 +47,44 @@ public class Main {
 		StringBuffer buffer = new StringBuffer();
 		
 		while ((line = bufferedReader.readLine()) != null) {
-			StringBuffer tempBuffer = new StringBuffer();
-			logger.info("Lendo a linha: " + line);
-
-			String[] lineArray = line.split("\\s");
-			validateLineLength(lineArray.length);
-			int lastValueToCompare = -1;
-			int countValue = 0;
-			
-			for (int i = 0; i < lineArray.length; i++) {
-				validateValue(lineArray[i]);
-				
-				if (lastValueToCompare < 0) {
-					lastValueToCompare = Integer.valueOf(lineArray[i]);
-					countValue++;
-				} else {
-					if (Integer.valueOf(lineArray[i]).equals(lastValueToCompare)) {
-						countValue++;
-					} else {
-						tempBuffer.append(countValue + " " + lastValueToCompare + " ");
-						countValue = 1;
-					}
-					lastValueToCompare = Integer.valueOf(lineArray[i]);
-				}
-				
-			}
-			
-			tempBuffer.append(countValue + " " + lastValueToCompare + " ");
-			
-			buffer.append(tempBuffer.toString().trim()).append("\n");
+			buffer.append(buildOutputLine(line));
 		}
 		
-		bufferedReader.close();
 		buffer.replace(buffer.length() - 1, buffer.length(), "");
+		bufferedReader.close();
 		return buffer;
+	}
+
+	private static StringBuffer buildOutputLine(String line) throws IOException {
+		StringBuffer tempBuffer = new StringBuffer();
+		logger.info("Lendo a linha: " + line);
+
+		String[] lineArray = line.split("\\s");
+		validateLineLength(lineArray.length);
+		
+		int lastNumber = -1;
+		int totalCount = 0;
+		
+		for (int i = 0; i < lineArray.length; i++) {
+			String actualNumber = lineArray[i];
+			validateValue(actualNumber);
+			
+			if (lastNumber < 0) {
+				lastNumber = Integer.valueOf(actualNumber);
+				totalCount++;
+			} else {
+				if (Integer.valueOf(actualNumber).equals(lastNumber)) {
+					totalCount++;
+				} else {
+					tempBuffer.append(totalCount + " " + lastNumber + " ");
+					totalCount = 1;
+				}
+				lastNumber = Integer.valueOf(actualNumber);
+			}
+			
+		}
+		
+		return tempBuffer.append(totalCount + " " + lastNumber).append("\n");
 	}
 
 	private static void validateValue(String valueString) {
