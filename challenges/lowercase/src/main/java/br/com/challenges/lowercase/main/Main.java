@@ -7,6 +7,13 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Given a string write a program to convert it into lowercase:
+ * 
+ * input.: HELLO World!
+ * output: hello world!
+ *
+ */
 public class Main {
 	private static final Logger logger = Logger.getLogger(Main.class);
 	
